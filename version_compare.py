@@ -84,6 +84,8 @@ def parse_args() -> Tuple[str, str, str, Path, bool, str]:
 
 
 def main():
+    print(f"sys.argv: {sys.argv}")
+
     main_branch, bump_type, bump_commit_file, pyproject, skip_push, tag_prefix = parse_args()
     print('main_branch', main_branch)
     print('bump_type', bump_type)
