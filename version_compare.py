@@ -9,6 +9,25 @@ from packaging.version import parse, Version
 import toml
 
 
+def git_push_with_retries(remote_url, branch, tag):
+    retries = 0
+    max_retries = 3
+    while retries < max_retries:
+        try:
+            subprocess.run(["git", "pull", "--rebase"], check=True)
+            subprocess.run(["git", "push", "origin", f"HEAD:{branch}"], check=True)
+            subprocess.run(["git", "push", "origin", "tag", tag], check=True)
+            break
+        except subprocess.CalledProcessError:
+            retries += 1
+            print(f"Retrying in 5 seconds... (attempt {retries}/{max_retries})")
+            time.sleep(5)
+    else:
+        print("Failed after 3 retries. Exiting.")
+        return 1
+    return 0
+
+
 def set_git_config():
     github_user = os.environ.get('GITHUB_USER', 'Automated Version Bump')
     github_email = os.environ.get('GITHUB_EMAIL', 'gh-action-bump-version@users.noreply.github.com')
@@ -126,11 +145,13 @@ def main():
         set_git_config()
         run(["git", "add", str(pyproject)], check=True)
         run(["git", "commit", "-m", bump_message], check=True)
-        if not skip_push:
+
+        gh_token = os.environ["GH_TOKEN"]
+        remote_url = f"https://{gh_token}@github.com/ambient-labs/GBNF.git"
             
-            # Push the changes
-            run(["git", "push"], check=True)
-            run(["git", "push", "--tags"], check=True)
+        result = git_push_with_retries(remote_url, branch, new_tag)
+        if result != 0:
+            exit(result)
     else:
         print('No need to bump the version this time.')
 
