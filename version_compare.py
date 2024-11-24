@@ -100,7 +100,7 @@ def main():
             fh.write(bump_message)
         # Set the newTag environment variable
         os.environ["newTag"] = new_tag
-
+        print('skip_push', skip_push)
         if not skip_push:
             # Push the changes
             run(["git", "push"], check=True)
