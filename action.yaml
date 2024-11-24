@@ -17,6 +17,10 @@ inputs:
     description: 'If true, skip pushing any commits or tags created after the version bump'
     default: 'false'
     required: false
+  tag-prefix:
+    description: 'Prefix that is used for the git tag'
+    default: ''
+    required: false
 outputs:
   newTag:
     description: 'The newly created tag'    
