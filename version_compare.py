@@ -3,6 +3,7 @@ import os
 import argparse
 from pathlib import Path
 from subprocess import check_output, run
+import subprocess
 from typing import Literal, Optional, Tuple
 
 from packaging.version import parse, Version
