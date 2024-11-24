@@ -92,15 +92,15 @@ def main():
     print(f"Current branch version: {current_version}")
     if current_version <= main_version:
         new_version = get_next_version(main_version, bump_type)
-        new_version = f"{tag_prefix}{new_version}"
         bump_pyproject(pyproject, new_version)
+        new_tag = f"{tag_prefix}{new_version}"
         bump_message = f"Bumped version from {current_version} to {new_version}"
         print(bump_message)
         with open(bump_commit_file, "w") as fh:
             fh.write(bump_message)
         # Set the newTag environment variable
-        os.environ["newTag"] = new_version
-
+        os.environ["newTag"] = new_tag
+        print('skip_push', skip_push)
         if not skip_push:
             # Push the changes
             run(["git", "push"], check=True)
