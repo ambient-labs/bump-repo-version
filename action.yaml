@@ -13,11 +13,12 @@ inputs:
   python_version:
     description: "The python version to build the package with"
     required: true
-  skip-push:
+  skip_push:
     description: 'If true, skip pushing any commits or tags created after the version bump'
-    default: 'false'
+    default: false
     required: false
-  tag-prefix:
+    type: boolean
+  tag_prefix:
     description: 'Prefix that is used for the git tag'
     default: ''
     required: false
@@ -49,13 +50,15 @@ runs:
           --main ${{ inputs.main_branch }} \
           --bump_type ${{ inputs.bump_type }} \
           --pyproject ${{ inputs.file_to_bump }} \
-          --bump_commit_file ${bump_commit_file}
+          --bump_commit_file $bump_commit_file \
+          --skip-push ${{ inputs.skip_push }} \
+          --tag-prefix "${{ inputs.tag_prefix }}"
 
         # this file only exists if a version bump has happened
-        if [ -f ${bump_commit_file} ]
+        if [ -f $bump_commit_file ]
         then
-          echo "bumped=`cat ${bump_commit_file}`" >> "$GITHUB_OUTPUT"
-          rm ${bump_commit_file}
+          echo "bumped=`cat $bump_commit_file`" >> "$GITHUB_OUTPUT"
+          rm $bump_commit_file
         else
           echo "bumped=false" >> "$GITHUB_OUTPUT"
         fi
