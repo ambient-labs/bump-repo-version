@@ -49,7 +49,7 @@ def bump_pyproject(pyproject: Path, new_version_number: str) -> None:
         toml.dump(d, fh)
 
 
-def parse_args() -> Tuple[str, str, str, Path]:
+def parse_args() -> Tuple[str, str, str, Path, bool, str]:
     """get argparse values"""
     parser = argparse.ArgumentParser()
     parser.add_argument("--main", help="Main branch name", required=True)
@@ -65,6 +65,8 @@ def parse_args() -> Tuple[str, str, str, Path]:
         help="Path to file containing git commit message",
         required=True,
     )
+    parser.add_argument("--skip-push", action="store_true", help="Skip pushing the changes")
+    parser.add_argument("--tag-prefix", help="Prefix that is used for the git tag", default="")
     args = parser.parse_args()
     pyproject = Path(args.pyproject)
     if not Path(pyproject).is_file():
@@ -75,6 +77,8 @@ def parse_args() -> Tuple[str, str, str, Path]:
         args.bump_type,
         args.bump_commit_file,
         pyproject,
+        args.skip_push,
+        args.tag_prefix,
     )
 
 
