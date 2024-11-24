@@ -107,7 +107,11 @@ def main():
         new_tag = f"{tag_prefix}{new_version}"
         os.environ["newTag"] = new_tag
         print('skip_push', skip_push)
+        # Commit the version bump
+        run(["git", "add", str(pyproject)], check=True)
+        run(["git", "commit", "-m", bump_message], check=True)
         if not skip_push:
+            
             # Push the changes
             run(["git", "push"], check=True)
             run(["git", "push", "--tags"], check=True)
