@@ -149,7 +149,7 @@ def main():
         gh_token = os.environ["GITHUB_TOKEN"]
         remote_url = f"https://{gh_token}@github.com/ambient-labs/GBNF.git"
             
-        result = git_push_with_retries(remote_url, branch, new_tag)
+        result = git_push_with_retries(remote_url, main_branch, new_tag)
         if result != 0:
             exit(result)
     else:
