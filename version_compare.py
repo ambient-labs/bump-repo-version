@@ -117,6 +117,7 @@ def main():
         # Set the newTag environment variable
         new_tag = f"{tag_prefix}{new_version}"
         os.environ["newTag"] = new_tag
+        print('new_tag', new_tag)
         # Commit the version bump
         set_git_config()
         run(["git", "add", str(pyproject)], check=True)
