@@ -1,7 +1,7 @@
 import os
 import argparse
 from pathlib import Path
-from subprocess import check_output
+from subprocess import check_output, run
 from typing import Literal, Optional, Tuple
 
 from packaging.version import parse, Version
@@ -83,7 +83,7 @@ def parse_args() -> Tuple[str, str, str, Path, bool, str]:
 
 
 def main():
-    main_branch, bump_type, bump_commit_file, pyproject = parse_args()
+    main_branch, bump_type, bump_commit_file, pyproject, skip_push, tag_prefix = parse_args()
 
     main_version = get_main_version(pyproject, main_branch)
     current_version = get_current_version(pyproject)
@@ -92,16 +92,19 @@ def main():
     print(f"Current branch version: {current_version}")
     if current_version <= main_version:
         new_version = get_next_version(main_version, bump_type)
+        new_version = f"{tag_prefix}{new_version}"
         bump_pyproject(pyproject, new_version)
-        bump_message = (
-            f"Bumped version from {current_version} to {new_version}"
-        )
+        bump_message = f"Bumped version from {current_version} to {new_version}"
         print(bump_message)
         with open(bump_commit_file, "w") as fh:
             fh.write(bump_message)
         # Set the newTag environment variable
         os.environ["newTag"] = new_version
-        
+
+        if not skip_push:
+            # Push the changes
+            run(["git", "push"], check=True)
+            run(["git", "push", "--tags"], check=True)
     else:
         print('No need to bump the version this time.')
 
