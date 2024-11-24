@@ -29,15 +29,15 @@ def get_current_version(pyproject: str) -> Version:
 
 
 def get_next_version(
-    version_number: Version, bump_type: Literal["major", "minor", "micro"]
+    version_number: Version, bump_type: Literal["major", "minor", "patch"]
 ) -> str:
     """Bumps the provided version_number by one"""
-    major, minor, micro = version_number.release
+    major, minor, patch = version_number.release
     if bump_type == "major":
         return f"{major + 1}.0.0"
     if bump_type == "minor":
         return f"{major}.{minor + 1}.0"
-    return f"{major}.{minor}.{micro + 1}"
+    return f"{major}.{minor}.{patch + 1}"
 
 
 def bump_pyproject(pyproject: Path, new_version_number: str) -> None:
@@ -56,7 +56,7 @@ def parse_args() -> Tuple[str, str, str, Path, bool, str]:
     parser.add_argument(
         "--bump_type",
         help="Bump type",
-        choices=["major", "minor", "micro"],
+        choices=["major", "minor", "patch"],
         required=True,
     )
     parser.add_argument("--pyproject", help="Path to pyproject.toml", required=True)
@@ -100,7 +100,7 @@ def main():
             fh.write(bump_message)
         # Set the newTag environment variable
         os.environ["newTag"] = new_tag
-        print('skip_push', skip_push)
+
         if not skip_push:
             # Push the changes
             run(["git", "push"], check=True)
