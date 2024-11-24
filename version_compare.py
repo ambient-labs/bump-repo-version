@@ -94,7 +94,7 @@ def parse_args() -> Tuple[str, str, str, Path, bool, str]:
 
 def main():
     print(f"sys.argv: {sys.argv}")
-    run(['echo', 'newTag=$new_tag', '>>$GITHUB_OUTPUT'], check=True)
+    run(['echo', 'foo="foo"', '>>$GITHUB_OUTPUT'], check=True)
      
     main_branch, bump_type, bump_commit_file, pyproject, skip_push, tag_prefix = parse_args()
     print('main_branch', main_branch)
