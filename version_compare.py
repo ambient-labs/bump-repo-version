@@ -121,11 +121,11 @@ def main():
         set_git_config()
         run(["git", "add", str(pyproject)], check=True)
         run(["git", "commit", "-m", bump_message], check=True)
-        if not skip_push:
+        # if not skip_push:
             
-            # Push the changes
-            run(["git", "push"], check=True)
-            run(["git", "push", "--tags"], check=True)
+        #     # Push the changes
+        #     run(["git", "push"], check=True)
+        #     run(["git", "push", "--tags"], check=True)
     else:
         print('No need to bump the version this time.')
 
