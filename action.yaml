@@ -62,10 +62,3 @@ runs:
         else
           echo "bumped=false" >> "$GITHUB_OUTPUT"
         fi
-
-    - name: Commit version bump
-      if: steps.version_bumped.outputs.bumped != 'false'
-      uses: EndBug/add-and-commit@v9
-      with:
-        message: ${{ steps.version_bumped.outputs.bumped }}
-        add: ${{ inputs.file_to_bump }}
