@@ -65,7 +65,8 @@ def parse_args() -> Tuple[str, str, str, Path, bool, str]:
         help="Path to file containing git commit message",
         required=True,
     )
-    parser.add_argument("--skip-push", action="store_true", help="Skip pushing the changes")
+    parser.add_argument("--skip-push", type=bool, help="Skip pushing the changes")
+
     parser.add_argument("--tag-prefix", help="Prefix that is used for the git tag", default="")
     args = parser.parse_args()
     pyproject = Path(args.pyproject)
@@ -84,7 +85,12 @@ def parse_args() -> Tuple[str, str, str, Path, bool, str]:
 
 def main():
     main_branch, bump_type, bump_commit_file, pyproject, skip_push, tag_prefix = parse_args()
-
+    print('main_branch', main_branch)
+    print('bump_type', bump_type)
+    print('bump_commit_file', bump_commit_file)
+    print('pyproject', pyproject)
+    print('skip_push', skip_push)
+    print('tag_prefix', tag_prefix)
     main_version = get_main_version(pyproject, main_branch)
     current_version = get_current_version(pyproject)
 
@@ -93,12 +99,12 @@ def main():
     if current_version <= main_version:
         new_version = get_next_version(main_version, bump_type)
         bump_pyproject(pyproject, new_version)
-        new_tag = f"{tag_prefix}{new_version}"
         bump_message = f"Bumped version from {current_version} to {new_version}"
         print(bump_message)
         with open(bump_commit_file, "w") as fh:
             fh.write(bump_message)
         # Set the newTag environment variable
+        new_tag = f"{tag_prefix}{new_version}"
         os.environ["newTag"] = new_tag
         print('skip_push', skip_push)
         if not skip_push:
