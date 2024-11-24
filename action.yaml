@@ -13,6 +13,9 @@ inputs:
   python_version:
     description: "The python version to build the package with"
     required: true
+outputs:
+  newTag:
+    description: 'The newly created tag'    
 
 runs:
   using: "composite"
