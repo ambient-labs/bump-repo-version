@@ -9,6 +9,14 @@ from packaging.version import parse, Version
 import toml
 
 
+def set_git_config():
+    github_user = os.environ.get('GITHUB_USER', 'Automated Version Bump')
+    github_email = os.environ.get('GITHUB_EMAIL', 'gh-action-bump-version@users.noreply.github.com')
+
+    run(['git', 'config', 'user.name', f'"{github_user}"'], check=True)
+    run(['git', 'config', 'user.email', f'"{github_email}"'], check=True)
+    
+
 def get_main_version(project_file: Path, main_branch: Optional[str] = None) -> Version:
     """
     Uses git cat-file to toml load the pyproject file and returns the verison number
@@ -109,8 +117,8 @@ def main():
         # Set the newTag environment variable
         new_tag = f"{tag_prefix}{new_version}"
         os.environ["newTag"] = new_tag
-        print('skip_push', skip_push)
         # Commit the version bump
+        set_git_config()
         run(["git", "add", str(pyproject)], check=True)
         run(["git", "commit", "-m", bump_message], check=True)
         if not skip_push:
