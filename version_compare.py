@@ -94,6 +94,9 @@ def main():
         print(bump_message)
         with open(bump_commit_file, "w") as fh:
             fh.write(bump_message)
+        # Set the newTag environment variable
+        os.environ["newTag"] = new_version
+        
     else:
         print('No need to bump the version this time.')
 
