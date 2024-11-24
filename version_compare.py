@@ -14,6 +14,8 @@ import toml
 def git_push_with_retries(remote_url, branch, tag):
     retries = 0
     max_retries = 3
+    subprocess.run(["git", "remote", "set-url", "origin", remote_url], check=True)
+
     while retries < max_retries:
         try:
             subprocess.run(["git", "pull", "--rebase"], check=True)
