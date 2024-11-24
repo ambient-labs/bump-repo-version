@@ -146,7 +146,7 @@ def main():
         run(["git", "add", str(pyproject)], check=True)
         run(["git", "commit", "-m", bump_message], check=True)
 
-        gh_token = os.environ["GH_TOKEN"]
+        gh_token = os.environ["GITHUB_TOKEN"]
         remote_url = f"https://{gh_token}@github.com/ambient-labs/GBNF.git"
             
         result = git_push_with_retries(remote_url, branch, new_tag)
