@@ -94,7 +94,7 @@ def parse_args() -> Tuple[str, str, str, Path, bool, str]:
 
 def main():
     print(f"sys.argv: {sys.argv}")
-    run(['echo', "'foo=foo' >> $GITHUB_OUTPUT"])
+    run(['echo', 'newTag=$new_tag', '>>$GITHUB_OUTPUT'], check=True)
      
     main_branch, bump_type, bump_commit_file, pyproject, skip_push, tag_prefix = parse_args()
     print('main_branch', main_branch)
@@ -117,7 +117,8 @@ def main():
             fh.write(bump_message)
         # Set the newTag environment variable
         new_tag = f"{tag_prefix}{new_version}"
-        run(['echo', f"'newTag={new_tag}' >> $GITHUB_OUTPUT"])
+        run(['echo', f'newTag={new_tag}', '>>$GITHUB_OUTPUT'], check=True)
+
         
             
         print('new_tag', new_tag)
