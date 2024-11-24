@@ -116,7 +116,14 @@ def main():
             fh.write(bump_message)
         # Set the newTag environment variable
         new_tag = f"{tag_prefix}{new_version}"
-        os.environ["newTag"] = new_tag
+        
+        # Set the newTag output
+        try:
+            os.system(f"echo 'newTag={new_tag}' >> $GITHUB_OUTPUT")
+        except:
+            # For older GitHub Actions runners
+            print(f"::set-output name=newTag::{new_tag}")
+            
         print('new_tag', new_tag)
         # Commit the version bump
         set_git_config()
